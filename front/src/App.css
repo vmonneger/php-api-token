@@ -1,0 +1,16 @@
+.App {
+  margin-top: 60px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  margin-top: 60px;
+}
+

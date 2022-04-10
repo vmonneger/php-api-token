@@ -28,11 +28,12 @@ export const FormPost: React.FC<{refetchQuery: any}> = ({refetchQuery}) => {
       }
     }
     
-    fetch('http://localhost:5000/back/post', optionsFetch)
+    fetch('http://localhost:8000/post', optionsFetch)
     .then(resp => resp.json())
     .then((data) => {
       if (data.error) {
         console.log(data.error)
+        alert('token invalide')
       } else {
         refetchQuery(true)
         setState({ ...initialState });

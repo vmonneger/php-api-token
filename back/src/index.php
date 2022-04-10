@@ -9,7 +9,6 @@
 
   $request_method = $_SERVER["REQUEST_METHOD"];
   $route = explode('/', $_SERVER['REQUEST_URI']);
-  
 
   switch($request_method)
   {
@@ -21,7 +20,7 @@
         $queryCreateUser = "INSERT INTO users (username, password) VALUES('$username', '$password')";
         $queryIsUserExist = "SELECT id, username, password FROM users WHERE username = '$username'";
         
-        if ($route[2] === 'signup') {
+        if ($route[1] === 'signup') {
           $result = mysqli_query($conn, $queryCreateUser);
 
           if (!$result) {
@@ -32,13 +31,16 @@
           }
         }
 
-        if ($route[2] === 'login') {
+        if ($route[1] === 'login') {
           $result = mysqli_query($conn, $queryIsUserExist);
 
           if (mysqli_num_rows($result) > 0) {
             $payload = $username;
             $token = generate_token($payload);
-            echo json_encode(array('token' => $token));
+            echo json_encode(array(
+              'token' => $token,
+              'username' => $username
+            ));
           } else {
             http_response_code(409);
             echo json_encode(array('error' => 'pas de user'));
@@ -50,7 +52,7 @@
         }
 
       }
-      if ($route[2] === 'post') {
+      if ($route[1] === 'post') {
         $token = $_SERVER['HTTP_AUTHORIZATION'];
         if (is_token_valid($token)) {
           $userNameToken = get_username_from_token($token);
@@ -81,7 +83,7 @@
       }
     break;
     case 'GET':
-      if($route[2] === 'articles') {
+      if($route[1] === 'articles') {
         $queryAllArticle = "SELECT articles.*, users.username FROM articles INNER JOIN users ON  articles.user_id = users.id";
 
         $result = mysqli_query($conn, $queryAllArticle);
@@ -97,5 +99,6 @@
           echo json_encode($new_array);
         }
       }
+    break;
   }
 ?>

@@ -1,5 +1,16 @@
-
+version: '3'
 services:
+    php-apache:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        links:
+            - db
+        volumes:
+            - ./back/src:/var/www/html/
+        ports:
+            - 8000:80
+
     db:
         image: mariadb
         restart: always
@@ -9,7 +20,7 @@ services:
             MYSQL_PASSWORD: admin
             MYSQL_ROOT_PASSWORD: 'admin'
         volumes:
-            - ./datas:/var/lib/mysql
+            - ./apitoken.sql:/docker-entrypoint-initdb.d/apitoken.sql
         ports:
             - 3306:3306
 

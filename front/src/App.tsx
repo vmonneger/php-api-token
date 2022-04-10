@@ -13,10 +13,12 @@ interface Articles {
 
 function App() {
   const [articles, setArticles] = useState<Array<Articles>>([])
-  const [isRegistered, setIsRegistered] = useState<boolean>(false)
+  const [isLogin, setIsLogin] = useState<boolean>(false)
   const [refetchQuery, setRefetchQuery] = useState<boolean>(false)
+  const [profileUsername, setProfileUsername] = useState<string>('')
 
   useEffect(() => {
+    console.log(refetchQuery)
     if (articles.length === 0) {
       fetchArticles()
     }
@@ -31,7 +33,7 @@ function App() {
       method: 'GET',
     }
 
-    fetch('http://localhost:5000/back/articles', optionsFetch)
+    fetch('http://localhost:8000/articles', optionsFetch)
       .then(resp => resp.json())
       .then((data) => {
         setArticles(data)
@@ -52,10 +54,13 @@ function App() {
   
   return (
     <div className="App">
-      <FormAuth isLogin={setIsRegistered} />
+      <FormAuth isLogin={setIsLogin} getUsername={setProfileUsername}/>
+      {
+        isLogin ?  <h1>Bonjour {profileUsername}</h1> : null
+      }
       <div className="content">
         {
-          isRegistered ? <FormPost refetchQuery={setRefetchQuery} /> : null
+          isLogin ? <FormPost refetchQuery={setRefetchQuery} /> : null
         }
       </div>
         {cardsParsed}
